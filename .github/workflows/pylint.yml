@@ -1,20 +1,17 @@
-name: MyPy Pylint deploy Workflow
-on: push
+name: Code Style
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 jobs:
-  tests:
+  code-style:
     runs-on: ubuntu-latest
     steps:
       - name: Get code
         uses: actions/checkout@v4
-      - name: Install pylint
-        run: pip install pylint
-      - name: Do Tests
-        run: pylint .
-  deploy:
-    needs: tests # with this statement the 'deploy' job waits for 'tests' to finish
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get code
-        uses: actions/checkout@v4
-      - name: Deploy
-        run: echo "Deploying..."
+      - name: Install pylint and mypy
+        run: pip install pylint mypy
+      - name: Run pylint
+        run: python3 -m pylint .
+      - name: Run mypy
+        run: python3 -m mypy .
